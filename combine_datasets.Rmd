@@ -1,0 +1,34 @@
+---
+title: "605final"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(stringr)
+```
+
+```{r}
+elect_data = read.csv("~/Desktop/20161108__al__general__precinct.csv")
+elect_data$county <- as.character(elect_data$county)
+head(elect_data)
+```
+```{r}
+county_data = read.csv("~/Desktop/acs2017_county_data.csv")
+head(county_data)
+colnames(county_data)[3]<-"county"
+county_data$county <- sub("[[:blank:]]County.*","",county_data$county)
+
+head(county_data)
+```
+```{r}
+df <- merge(elect_data,county_data,by="county",all.x = TRUE)
+head(df)
+```
+
+```{r}
+write.csv(df,"county_election_data.csv")
+```
+
