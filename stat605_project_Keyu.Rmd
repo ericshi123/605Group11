@@ -70,3 +70,40 @@ mean((predict(fit,newdata = new)-taxi.2.1$tip_amount)**2)
 plot(density(predict(fit,newdata = new)),main = "tip_amount")
 lines(density(taxi.2.1$tip_amount),col = "red")
 ```
+
+#heatmap
+```{r}
+taxi.12 = rbind(taxi.1,taxi.2)
+class(taxi.12$pickup_datetime)
+library(ggmap)
+library(ggplot2)
+register_google(key = "AIzaSyDUf9WsYILNDi5vsUOrNbQHMpebl0W2pac")
+map <- get_map(location=c(lon=-73.935242,lat=40.730610),
+               zoom=11, maptype='roadmap', color='bw')
+ggmap(map, extent = "device") +
+  geom_bin2d(data = taxi.12, aes(x = pickup_longitude,y = pickup_latitude),bins=100)
+
+```
+```{r}
+area1 = read.csv("area_1.csv")
+area2 = read.csv("area_2.csv")
+area3 = read.csv("area_3.csv")
+area4 = read.csv("area_4.csv")
+area5 = read.csv("area_5.csv")
+area6 = read.csv("area_6.csv")
+area = bind_rows(area1,area2,area3,area4,area5,area6)
+area = area[-which(area$area=="0 0"),]
+length(unique(area$area))
+
+area = separate(area,col = "area",sep = " ",into = c("lat","lon"))
+area$lat = as.numeric(area$lat)
+area$lon = as.numeric(area$lon)
+```
+
+```{r}
+map <- get_map(location=c(lon=-73.935242,lat=40.730610),
+               zoom=11, maptype='roadmap', color='bw')
+ggmap(map, extent = "device") +
+  geom_point(data = area, aes(x = lon,y = lat))
+
+```
