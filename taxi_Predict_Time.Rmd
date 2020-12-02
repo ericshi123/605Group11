@@ -1,0 +1,66 @@
+---
+title: "Predicting Trip Time given locations and trip distance"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(randomForest)
+```
+
+```{r}
+data1 <- read.csv("data_1.csv")
+data2 <- read.csv("data_2.csv")
+data <- rbind(data1,data2)
+```
+
+
+
+
+# Predict trip time given other variables
+
+
+
+## Linear Regression
+```{r}
+smp_size <- floor(0.75 * nrow(data))
+
+
+set.seed(123)
+train_ind <- sample(seq_len(nrow(data)), size = smp_size)
+
+train <- data[train_ind, ]
+test <- data[-train_ind, ]
+```
+```{r}
+lm_time <- lm(trip_time_in_secs ~ trip_distance + pickup_longitude + pickup_latitude + dropoff_longitude + dropoff_latitude,data=train)
+summary(lm_time)
+```
+
+```{r}
+mean((test$trip_time_in_secs - predict.lm(lm_time, test)) ^ 2)
+```
+
+
+## Random Forest Regression
+
+```{r}
+rf <- randomForest(trip_time_in_secs ~ trip_distance + pickup_longitude + pickup_latitude + dropoff_longitude + dropoff_latitude, data=data, mtry = 3, importance = TRUE, na.action = na.omit)
+```
+```{r}
+rf
+```
+```{r}
+plot(rf)
+```
+
+```{r}
+#same plot as above, different code options
+plot(rf$mse)
+```
+
+
+
