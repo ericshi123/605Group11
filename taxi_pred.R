@@ -24,15 +24,15 @@ train <- df[train_ind, ]
 test <- df[-train_ind, ]
 lm_time <- lm(trip_time_in_secs ~ trip_distance + pickup_longitude + pickup_latitude + dropoff_longitude + dropoff_latitude,data=train)
 # Saving output
-sink("lm_time_pred.txt")
+sink(file=paste(data,"_lm.txt",sep=''))
 cat(mean((test$trip_time_in_secs - predict.lm(lm_time, test)) ^ 2))
 sink()
 
-
 ## Random Forest Regression
 rf <- randomForest(trip_time_in_secs ~ trip_distance + pickup_longitude + pickup_latitude + dropoff_longitude + dropoff_latitude, data=df, mtry = 3, importance = TRUE, na.action = na.omit)
-jpeg("rf_time_pred.jpg")
-plot(rf)
-dev.off()
 
+saveRDS(rf, file=paste(data,"_rf.rds",sep=''))
 
+#jpeg("rf_time_pred.jpg")
+#plot(rf)
+#dev.off()

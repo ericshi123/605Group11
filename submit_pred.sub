@@ -1,0 +1,17 @@
+universe = vanilla
+log    =    submit_pred.log
+error  =  submit_pred.err
+output = submit_pred.out
+
+executable = ./pre_pred.sh
+arguments = sample.csv
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+transfer_input_files = http://proxy.chtc.wisc.edu/SQUID/chtc/R402.tar.gz,packages.tar.gz, taxi_pred.R, sample.csv
+
+request_cpus = 1
+request_memory = 20GB
+request_disk = 1GB
+
+queue 1
